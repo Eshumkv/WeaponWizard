@@ -11,7 +11,7 @@ namespace WeaponWizard.GameElements
 			Grass
 		}
 
-		public static readonly Point TileSize = new Point (1, 1);
+		public static readonly Point TileSize = new Point (32, 32);
 
 		private int _x, _y;
 
