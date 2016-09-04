@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
-namespace WeaponWizard.VoronoiDiagram2
+namespace WeaponWizard.VoronoiDiagram
 {
-	public class Voronoi2
+	public class Voronoi
 	{
 		private List<VPoint> data;
 
-		public Voronoi2 ()
+		public Voronoi ()
 		{
 		}
 
