@@ -26,6 +26,7 @@ namespace WeaponWizard
 			{ "loading", "loading" },
 			{ "mainmenu_bg", "mainmenu/background" },
 			{ "tile/grass", "tiles/grass" },
+			{ "tile/ocean", "tiles/ocean" },
 			{ "player", "player" }
 		});
 

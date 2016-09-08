@@ -2,43 +2,67 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using WeaponWizard.GameElements;
 
 namespace WeaponWizard.VoronoiDiagram
 {
 	public class Voronoi
 	{
+		private Random rand;
 		private List<VPoint> data;
 
-		public Voronoi ()
-		{
+		public List<VPoint> Points {
+			get {
+				return data;
+			}
 		}
 
-		public void Calculate (int amount)
-		{
-			var width = 400;
-			var height = 400;
+		public int Seed { get; private set; }
 
+		public Voronoi (int? seed = null)
+		{
+			if (seed == null) {
+				Seed = new Random ().Next (0, Int32.MaxValue);
+			} else {
+				Seed = (int)seed;
+			}
+
+
+			rand = new Random (Seed);
+		}
+
+		public void Calculate (int amount, int width, int height)
+		{
 			data = GenerateData (amount, width, height);
 			data = GetPoints (data, width, height);
 		}
 
 		public void Draw (SpriteBatch batch)
-		{
-			batch.Draw (GameEngine.DummyTexture, 
-				destinationRectangle: new Rectangle (0, 0, 400, 400),
-				color: Color.White);
-			
+		{			
 			foreach (var point in data) {
-				DrawPoint (batch, point);
+				if (point.OriginalPoint) {
+					DrawPoint (batch, point, Color.Black, 6);
+				} else {
+
+					var color = Color.ForestGreen;
+
+					switch (point.Type) {
+					case Tile.TileType.Ocean:
+						color = Color.DeepSkyBlue;
+						break;
+					default: 
+						break;
+					}
+					DrawPoint (batch, point, color);
+				}
 			}
 		}
 
-		private List<VPoint> GenerateData (int amount, int width, int height)
+		private List<VPoint> GenerateData (int totalamount, int width, int height)
 		{
 			var list = new List<VPoint> ();
-			var rand = new Random ();
 
-			int edge_amount = (int)(amount * 0.15);
+			int edge_amount = (int)(totalamount * 0.15);
 			// Either 7 part or 9
 			int height_limit = height / (rand.Next (2) == 0 ? 7 : 9);
 			int width_limit = width / (rand.Next (2) == 0 ? 9 : 11);
@@ -50,7 +74,7 @@ namespace WeaponWizard.VoronoiDiagram
 				var x = (i * width_part) + rand.Next (width_part);
 				var y = rand.Next (height_limit);
 
-				list.Add (new VPoint (x, y) { Color = Color.DeepSkyBlue });
+				list.Add (new VPoint (x, y, Tile.TileType.Ocean, true));
 			}
 
 			// Bottom part
@@ -58,7 +82,7 @@ namespace WeaponWizard.VoronoiDiagram
 				var x = (i * width_part) + rand.Next (width_part);
 				var y = (height - height_limit) + rand.Next (height_limit);
 
-				list.Add (new VPoint (x, y) { Color = Color.DeepSkyBlue });
+				list.Add (new VPoint (x, y, Tile.TileType.Ocean, true));
 			}
 
 			// Left part
@@ -66,7 +90,7 @@ namespace WeaponWizard.VoronoiDiagram
 				var x = rand.Next (width_limit);
 				var y = (i * height_part) + rand.Next (height_part);
 
-				list.Add (new VPoint (x, y) { Color = Color.DeepSkyBlue });
+				list.Add (new VPoint (x, y, Tile.TileType.Ocean, true));
 			}
 
 			// Right part
@@ -74,14 +98,20 @@ namespace WeaponWizard.VoronoiDiagram
 				var x = (width - width_limit) + rand.Next (width_limit);
 				var y = (i * height_part) + rand.Next (height_part);
 
-				list.Add (new VPoint (x, y) { Color = Color.DeepSkyBlue });
+				list.Add (new VPoint (x, y, Tile.TileType.Ocean, true));
 			}
 
-			for (var i = 0; i < (amount - (edge_amount * 4)); i++) {
-				var x = width_limit + rand.Next (width - (width_limit * 2));
-				var y = height_limit + rand.Next (height - (height_limit * 2));
+			var startWidth = width_limit;
+			var endWidth = width - (width_limit * 2);
+			var startHeight = height_limit;
+			var endHeight = height - (height_limit * 2);
+			var amount = totalamount - (edge_amount * 4);
 
-				list.Add (new VPoint (x, y) { Color = Color.ForestGreen });
+			for (var i = 0; i < amount; i++) {
+				var x = rand.Next (startWidth, endWidth + 1);
+				var y = rand.Next (startHeight, endHeight + 1);
+
+				list.Add (new VPoint (x, y, Tile.TileType.Grass, true));
 			}
 
 			return list;
@@ -107,9 +137,16 @@ namespace WeaponWizard.VoronoiDiagram
 						}
 					}
 
+					var original = false;
+
+					if (closest_point.X == x && closest_point.Y == y && closest_point.OriginalPoint) {
+						original = true;
+					}
+
 					list.Add (new VPoint (x, y) {
-						Color = closest_point.Color,
-						ClosestPoint = closest_point
+						Type = closest_point.Type,
+						ClosestPoint = closest_point,
+						OriginalPoint = original
 					});
 				}
 			}
@@ -119,10 +156,8 @@ namespace WeaponWizard.VoronoiDiagram
 
 		#region DRAWING FUNCTIONS
 
-		private void DrawPoint (SpriteBatch batch, VPoint point)
+		private void DrawPoint (SpriteBatch batch, VPoint point, Color color, int size = 1)
 		{
-			var size = 1;
-
 			var rect = new Rectangle (
 				           Convert.ToInt32 (point.X - (size / 2)), 
 				           Convert.ToInt32 (point.Y - (size / 2)), 
@@ -131,7 +166,7 @@ namespace WeaponWizard.VoronoiDiagram
 
 			batch.Draw (GameEngine.DummyTexture, 
 				destinationRectangle: rect,
-				color: point.Color);
+				color: color);
 		}
 
 		private void DrawLine (SpriteBatch batch, Vector2 start, Vector2 end)
@@ -167,14 +202,17 @@ namespace WeaponWizard.VoronoiDiagram
 
 		public VPoint ClosestPoint { get; set; }
 
-		public Color Color { get; set; }
+		public Tile.TileType Type { get; set; }
 
-		public VPoint (int x, int y)
+		public bool OriginalPoint { get; set; }
+
+		public VPoint (int x, int y, Tile.TileType type = Tile.TileType.Grass, bool isOriginal = false)
 		{
 			X = x;
 			Y = y;
-			Color = Color.Blue;
 			ClosestPoint = null;
+			Type = type;
+			OriginalPoint = isOriginal;
 		}
 
 		public Vector2 ToVector2 ()

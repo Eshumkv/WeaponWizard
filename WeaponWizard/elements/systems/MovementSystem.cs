@@ -28,24 +28,29 @@ namespace WeaponWizard.Elements.Systems
 				var sprite = entity.HasComponent<SpriteAnimationComponent> () ? entity.Get<SpriteAnimationComponent> () : null;
 
 				var spriteState = "idle";
+				var speed = mov.Speed;
+
+				if (Engine.Systems.InputSystem.IsKey (Keys.LeftShift)) {
+					speed = mov.Speed * 12;
+				}
 
 				if (Engine.Systems.InputSystem.IsKey (Keys.Right)) {
-					MoveEntity (entity, mov.Speed, 0);
+					MoveEntity (entity, speed, 0);
 					transform.Rotation = 0;
 					spriteState = "Move";
 				}
 				if (Engine.Systems.InputSystem.IsKey (Keys.Left)) {
-					MoveEntity (entity, -mov.Speed, 0);
+					MoveEntity (entity, -speed, 0);
 					transform.Rotation = MathHelper.Pi;
 					spriteState = "Move";
 				}
 				if (Engine.Systems.InputSystem.IsKey (Keys.Up)) {
-					MoveEntity (entity, 0, -mov.Speed);
+					MoveEntity (entity, 0, -speed);
 					transform.Rotation = MathHelper.PiOver2;
 					spriteState = "Move";
 				}
 				if (Engine.Systems.InputSystem.IsKey (Keys.Down)) {
-					MoveEntity (entity, 0, mov.Speed);
+					MoveEntity (entity, 0, speed);
 					transform.Rotation = 3 * MathHelper.Pi / 2;
 					spriteState = "Move";
 				}

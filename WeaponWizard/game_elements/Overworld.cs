@@ -15,20 +15,12 @@ namespace WeaponWizard.GameElements
 
 		public List<Tile> Tiles { get; set; }
 
+		public int Seed { get { return Vor.Seed; } }
+
 		public Overworld (GameEngine engine)
 		{
 			Tiles = new List<Tile> ();
-			var width = 10;
-			var height = 10;
-
-			for (var x = 0; x < width; x++) {
-				for (var y = 0; y < height; y++) {
-					Tiles.Add (new Tile (x, y, Tile.TileType.Grass, engine.Textures ["tile/grass"]));
-				}
-			}
-
-			Vor = new WeaponWizard.VoronoiDiagram.Voronoi ();
-			Vor.Calculate (100);
+			GenerateWorld (engine);
 		}
 
 		public void Draw (SpriteBatch batch)
@@ -51,6 +43,30 @@ namespace WeaponWizard.GameElements
 		public Point GetTileMiddlePoint (int x, int y)
 		{
 			return new Rectangle (x * Tile.TileSize.X, y * Tile.TileSize.Y, Tile.TileSize.X, Tile.TileSize.Y).Center;
+		}
+
+		public void GenerateWorld (GameEngine engine, int? seed = null)
+		{
+			Tiles.Clear ();
+			Vor = new WeaponWizard.VoronoiDiagram.Voronoi (seed);
+			Vor.Calculate (150, 300, 300);
+
+			foreach (var point in Vor.Points) {
+				var texturestr = "tile/grass";
+				var isPassable = true;
+
+				switch (point.Type) {
+				case Tile.TileType.Ocean:
+					texturestr = "tile/ocean";
+					isPassable = false;
+					break;
+				default:
+					break;
+				}
+
+				var tile = new Tile (point.X, point.Y, point.Type, engine.Textures [texturestr], isPassable);
+				Tiles.Add (tile);
+			}
 		}
 	}
 }

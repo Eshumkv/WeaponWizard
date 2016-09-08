@@ -43,6 +43,9 @@ namespace WeaponWizard.Screens
 			if (Engine.Systems.InputSystem.IsPressed (Keys.Escape)) {
 				return new Transition () { NextScreen = "mainmenu" };
 			}
+			if (Engine.Systems.InputSystem.IsPressed (Keys.Space)) {
+				_world.GenerateWorld (Engine);
+			}
 
 			return null;
 		}

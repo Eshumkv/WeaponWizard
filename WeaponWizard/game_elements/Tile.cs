@@ -8,10 +8,11 @@ namespace WeaponWizard.GameElements
 	{
 		public enum TileType
 		{
-			Grass
+			Grass,
+			Ocean
 		}
 
-		public static readonly Point TileSize = new Point (32, 32);
+		public static readonly Point TileSize = new Point (16, 16);
 
 		private int _x, _y;
 
