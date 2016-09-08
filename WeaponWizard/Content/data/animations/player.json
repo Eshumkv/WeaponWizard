@@ -1,0 +1,13 @@
+{
+    "Id": "player",
+    "Image": "player",
+    "Size": {
+        "X": 4,
+        "Y": 2,
+    },
+    "Time": "240",
+    "Animations": {
+        "Idle": [ 0 ],
+        "Move": [ 0, 5, 0, 3 ],
+    },
+}

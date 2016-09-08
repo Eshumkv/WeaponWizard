@@ -45,11 +45,8 @@
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\DesktopGL\NVorbis.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="LibNoise">
-      <HintPath>..\packages\LibNoise.0.2\lib\NET45\LibNoise.dll</HintPath>
-    </Reference>
-    <Reference Include="Priority Queue">
-      <HintPath>..\packages\OptimizedPriorityQueue.3.0.0\lib\net45\Priority Queue.dll</HintPath>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -102,14 +99,20 @@
     <Compile Include="elements\Enums\MovementState.cs" />
     <Compile Include="elements\components\MovieAnimationComponent.cs" />
     <Compile Include="elements\components\SpriteAnimationComponent.cs" />
-    <Compile Include="elements\components\animation\FrameInfo.cs" />
     <Compile Include="elements\Noise.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="game_elements\Voronoi.cs" />
+    <Compile Include="elements\serializers\RenderableComponentSerializer.cs" />
+    <Compile Include="elements\animation\AnimationJsonFile.cs" />
+    <Compile Include="elements\systems\AnimationDataStore.cs" />
+    <Compile Include="elements\animation\FrameInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />
     <None Include="packages.config" />
+    <None Include="Content\data\animations\player.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />
@@ -133,6 +136,9 @@
     <Folder Include="elements\Enums\" />
     <Folder Include="screens\" />
     <Folder Include="game_elements\" />
-    <Folder Include="elements\components\animation\" />
+    <Folder Include="Content\data\" />
+    <Folder Include="Content\data\animations\" />
+    <Folder Include="elements\serializers\" />
+    <Folder Include="elements\animation\" />
   </ItemGroup>
 </Project>

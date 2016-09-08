@@ -6,8 +6,10 @@ using WeaponWizard.Elements;
 using WeaponWizard.Elements.Components;
 using Microsoft.Xna.Framework.Input;
 using WeaponWizard.GameElements;
-using WeaponWizard.Elements.Components.Animation;
+using WeaponWizard.Elements.Animation;
 using System.Collections.Generic;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace WeaponWizard.Screens
 {
@@ -24,36 +26,6 @@ namespace WeaponWizard.Screens
 
 		public override void OnEnter ()
 		{
-			var sprite = new SpriteAnimationComponent (new Dictionary<string, List<FrameInfo>> { { "idle", new List<FrameInfo> {
-						new FrameInfo (new Rectangle (0, 0, 32, 39), 500)
-					}
-				}, { "walkingRight", new List<FrameInfo> {
-						new FrameInfo (new Rectangle (0, 0, 32, 39), 500),
-						new FrameInfo (new Rectangle (32, 0, 32, 39), 500),
-						new FrameInfo (new Rectangle (64, 0, 32, 39), 500),
-						new FrameInfo (new Rectangle (96, 0, 32, 39), 500),
-					}
-				}, { "walkingLeft", new List<FrameInfo> {
-						new FrameInfo (new Rectangle (0, 0, 32, 39), 500),
-						new FrameInfo (new Rectangle (32, 0, 32, 39), 500),
-						new FrameInfo (new Rectangle (64, 0, 32, 39), 500),
-						new FrameInfo (new Rectangle (96, 0, 32, 39), 500),
-					}
-				}, { "walkingDown", new List<FrameInfo> {
-						new FrameInfo (new Rectangle (0, 0, 32, 39), 500),
-						new FrameInfo (new Rectangle (32, 0, 32, 39), 500),
-						new FrameInfo (new Rectangle (64, 0, 32, 39), 500),
-						new FrameInfo (new Rectangle (96, 0, 32, 39), 500),
-					}
-				}, { "walkingUp", new List<FrameInfo> {
-						new FrameInfo (new Rectangle (0, 0, 32, 39), 500),
-						new FrameInfo (new Rectangle (32, 0, 32, 39), 500),
-						new FrameInfo (new Rectangle (64, 0, 32, 39), 500),
-						new FrameInfo (new Rectangle (96, 0, 32, 39), 500),
-					}
-				}
-			});
-
 			Engine.AddEntity (new Entity ()
 				.AddComponent (new TransformComponent (0, 0, 32, 39) {
 				Origin = new Vector2 (32 / 2, 39 / 2),
@@ -61,7 +33,7 @@ namespace WeaponWizard.Screens
 			})
 				.AddComponent (new RenderableComponent (Engine.Textures ["player"]) { SourceRect = new Rectangle (0, 0, 32, 39) })
 				.AddComponent (new MovementComponent (){ CenterCameraOnAction = true })
-				.AddComponent (sprite), "player");
+				.AddComponent (new SpriteAnimationComponent (Engine.AnimationStore.Get ("player", "Idle", "Move"))), "player");
 
 			Engine.CenterCameraOnEntity (Engine ["player"]);
 		}

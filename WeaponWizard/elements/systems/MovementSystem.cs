@@ -32,22 +32,22 @@ namespace WeaponWizard.Elements.Systems
 				if (Engine.Systems.InputSystem.IsKey (Keys.Right)) {
 					MoveEntity (entity, mov.Speed, 0);
 					transform.Rotation = 0;
-					spriteState = "walkingRight";
+					spriteState = "Move";
 				}
 				if (Engine.Systems.InputSystem.IsKey (Keys.Left)) {
 					MoveEntity (entity, -mov.Speed, 0);
 					transform.Rotation = MathHelper.Pi;
-					spriteState = "walkingLeft";
+					spriteState = "Move";
 				}
 				if (Engine.Systems.InputSystem.IsKey (Keys.Up)) {
 					MoveEntity (entity, 0, -mov.Speed);
 					transform.Rotation = MathHelper.PiOver2;
-					spriteState = "walkingUp";
+					spriteState = "Move";
 				}
 				if (Engine.Systems.InputSystem.IsKey (Keys.Down)) {
 					MoveEntity (entity, 0, mov.Speed);
 					transform.Rotation = 3 * MathHelper.Pi / 2;
-					spriteState = "walkingDown";
+					spriteState = "Move";
 				}
 
 				if (sprite != null) {

@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 
-namespace WeaponWizard.Elements.Components.Animation
+namespace WeaponWizard.Elements.Animation
 {
 	public struct FrameInfo
 	{

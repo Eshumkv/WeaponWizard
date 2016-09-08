@@ -9,14 +9,14 @@ namespace WeaponWizard.Elements
 		/// <summary>
 		/// The list of components.
 		/// </summary>
-		private Dictionary<Type, Component> _components;
+		public Dictionary<Type, Component> Components;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="WeaponWizard.Elements.Entity"/> class.
 		/// </summary>
 		public Entity ()
 		{
-			_components = new Dictionary<Type, Component> ();
+			Components = new Dictionary<Type, Component> ();
 		}
 
 		/// <summary>
@@ -27,7 +27,7 @@ namespace WeaponWizard.Elements
 		/// <typeparam name="T">The 1st type parameter.</typeparam>
 		public Entity AddComponent<T> (T component) where T : Component
 		{
-			_components.Add (typeof(T), component);
+			Components.Add (typeof(T), component);
 
 			return this;
 		}
@@ -39,8 +39,8 @@ namespace WeaponWizard.Elements
 		/// <typeparam name="T">The 1st type parameter.</typeparam>
 		public T RemoveComponent<T> () where T : Component
 		{
-			T component = _components [typeof(T)] as T;
-			_components.Remove (typeof(T));
+			T component = Components [typeof(T)] as T;
+			Components.Remove (typeof(T));
 
 			return component;
 		}
@@ -51,7 +51,7 @@ namespace WeaponWizard.Elements
 		/// <typeparam name="T">The 1st type parameter.</typeparam>
 		public T Get<T> () where T : Component
 		{
-			return _components [typeof(T)] as T;
+			return Components [typeof(T)] as T;
 		}
 
 		/// <summary>
@@ -62,7 +62,7 @@ namespace WeaponWizard.Elements
 		public bool HasComponent<T> () where T : Component
 		{
 			try {
-				return (_components [typeof(T)] as T) != null;
+				return (Components [typeof(T)] as T) != null;
 			} catch (KeyNotFoundException) {
 				return false;
 			}
@@ -76,7 +76,7 @@ namespace WeaponWizard.Elements
 		public bool HasComponent (Type t)
 		{ 
 			try {
-				var component = _components [t];
+				var component = Components [t];
 
 				return true;
 			} catch (KeyNotFoundException) {

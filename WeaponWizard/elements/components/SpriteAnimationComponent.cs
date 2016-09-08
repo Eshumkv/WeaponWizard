@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using WeaponWizard.Elements.Components.Animation;
+using WeaponWizard.Elements.Animation;
 using System.Linq;
 
 namespace WeaponWizard.Elements.Components

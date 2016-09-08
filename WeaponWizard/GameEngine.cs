@@ -12,6 +12,7 @@ using System.Linq;
 using WeaponWizard.Elements.Enums;
 using WeaponWizard.Screens;
 using WeaponWizard.Elements.Systems;
+using WeaponWizard.Elements.Animation;
 
 namespace WeaponWizard
 {
@@ -45,6 +46,8 @@ namespace WeaponWizard
 		#region Public Properties
 
 		public SystemManager Systems { get; private set; }
+
+		public AnimationDataStore AnimationStore { get; private set; }
 
 		public static Texture2D DummyTexture {
 			get {
@@ -125,6 +128,8 @@ namespace WeaponWizard
 			//_screen = Helper.RunPythonMain ("scripts/screens/main.py") ();
 
 			Textures.Load (Content);
+			AnimationStore = new AnimationDataStore (this, "Content\\data\\animations\\".ToPath (true));
+			AnimationStore.LoadAll ();
 
 			BaseGameScreen.StaticEngine = this;
 			LoadScreens ();

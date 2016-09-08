@@ -1,9 +1,11 @@
 ﻿using System;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using Newtonsoft.Json;
 
 namespace WeaponWizard.Elements.Components
 {
+	[JsonConverter (typeof(Serializers.RenderableComponentSerializer))]
 	public class RenderableComponent : Component
 	{
 		public Texture2D Texture { get; set; }

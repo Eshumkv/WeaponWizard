@@ -15,24 +15,76 @@ namespace WeaponWizard.VoronoiDiagram
 
 		public void Calculate (int amount)
 		{
-			data = new List<VPoint> ();
-			var rand = new Random ();
-			var width = 1000;
-			var height = 500;
+			var width = 400;
+			var height = 400;
 
-			for (var i = 0; i < amount; i++) {
-				var c = new Color (rand.Next (255), rand.Next (255), rand.Next (255));
-				data.Add (new VPoint (rand.Next (width), rand.Next (height)) { Color = c });
-			}
-
+			data = GenerateData (amount, width, height);
 			data = GetPoints (data, width, height);
 		}
 
 		public void Draw (SpriteBatch batch)
 		{
+			batch.Draw (GameEngine.DummyTexture, 
+				destinationRectangle: new Rectangle (0, 0, 400, 400),
+				color: Color.White);
+			
 			foreach (var point in data) {
 				DrawPoint (batch, point);
 			}
+		}
+
+		private List<VPoint> GenerateData (int amount, int width, int height)
+		{
+			var list = new List<VPoint> ();
+			var rand = new Random ();
+
+			int edge_amount = (int)(amount * 0.15);
+			// Either 7 part or 9
+			int height_limit = height / (rand.Next (2) == 0 ? 7 : 9);
+			int width_limit = width / (rand.Next (2) == 0 ? 9 : 11);
+			int width_part = width / edge_amount;
+			int height_part = height / edge_amount;
+
+			// Top part
+			for (var i = 0; i < edge_amount; i++) {
+				var x = (i * width_part) + rand.Next (width_part);
+				var y = rand.Next (height_limit);
+
+				list.Add (new VPoint (x, y) { Color = Color.DeepSkyBlue });
+			}
+
+			// Bottom part
+			for (var i = 0; i < edge_amount; i++) {
+				var x = (i * width_part) + rand.Next (width_part);
+				var y = (height - height_limit) + rand.Next (height_limit);
+
+				list.Add (new VPoint (x, y) { Color = Color.DeepSkyBlue });
+			}
+
+			// Left part
+			for (var i = 0; i < edge_amount; i++) {
+				var x = rand.Next (width_limit);
+				var y = (i * height_part) + rand.Next (height_part);
+
+				list.Add (new VPoint (x, y) { Color = Color.DeepSkyBlue });
+			}
+
+			// Right part
+			for (var i = 0; i < edge_amount; i++) {
+				var x = (width - width_limit) + rand.Next (width_limit);
+				var y = (i * height_part) + rand.Next (height_part);
+
+				list.Add (new VPoint (x, y) { Color = Color.DeepSkyBlue });
+			}
+
+			for (var i = 0; i < (amount - (edge_amount * 4)); i++) {
+				var x = width_limit + rand.Next (width - (width_limit * 2));
+				var y = height_limit + rand.Next (height - (height_limit * 2));
+
+				list.Add (new VPoint (x, y) { Color = Color.ForestGreen });
+			}
+
+			return list;
 		}
 
 		private List<VPoint> GetPoints (IEnumerable<VPoint> sites, int width, int height)
@@ -69,7 +121,7 @@ namespace WeaponWizard.VoronoiDiagram
 
 		private void DrawPoint (SpriteBatch batch, VPoint point)
 		{
-			var size = 6;
+			var size = 1;
 
 			var rect = new Rectangle (
 				           Convert.ToInt32 (point.X - (size / 2)), 

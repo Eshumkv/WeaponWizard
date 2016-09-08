@@ -28,7 +28,7 @@ namespace WeaponWizard.GameElements
 			}
 
 			Vor = new WeaponWizard.VoronoiDiagram.Voronoi ();
-			Vor.Calculate (75);
+			Vor.Calculate (100);
 		}
 
 		public void Draw (SpriteBatch batch)

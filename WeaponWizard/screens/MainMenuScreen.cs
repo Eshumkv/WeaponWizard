@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using WeaponWizard.Interfaces;
 using WeaponWizard.Elements;
 using WeaponWizard.Elements.Components;
-using WeaponWizard.Elements.Components.Animation;
+using WeaponWizard.Elements.Animation;
 
 namespace WeaponWizard.Screens
 {
