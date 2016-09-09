@@ -106,6 +106,7 @@
     <Compile Include="elements\animation\AnimationJsonFile.cs" />
     <Compile Include="elements\systems\AnimationDataStore.cs" />
     <Compile Include="elements\animation\FrameInfo.cs" />
+    <Compile Include="elements\Sprite.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />

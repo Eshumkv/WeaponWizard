@@ -13,6 +13,7 @@ using WeaponWizard.Elements.Enums;
 using WeaponWizard.Screens;
 using WeaponWizard.Elements.Systems;
 using WeaponWizard.Elements.Animation;
+using WeaponWizard.GameElements;
 
 namespace WeaponWizard
 {
@@ -25,10 +26,16 @@ namespace WeaponWizard
 			{ "default", "default" },
 			{ "loading", "loading" },
 			{ "mainmenu_bg", "mainmenu/background" },
+			{ "tile/default", "tiles/default" },
 			{ "tile/grass", "tiles/grass" },
 			{ "tile/ocean", "tiles/ocean" },
 			{ "player", "player" }
 		});
+		public Dictionary<Tile.TileType, Rectangle> TileSourceRects = new Dictionary<Tile.TileType, Rectangle> () {
+			{ Tile.TileType.Spawn, new Rectangle (0, 0, Tile.TileSize.X, Tile.TileSize.Y) },
+			{ Tile.TileType.Grass, new Rectangle (0, 0, Tile.TileSize.X, Tile.TileSize.Y) },
+			{ Tile.TileType.Ocean, new Rectangle (16, 0, Tile.TileSize.X, Tile.TileSize.Y) },
+		};
 
 		public Dictionary<string, IScreen> Screens;
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using WeaponWizard.VoronoiDiagram;
 
 namespace WeaponWizard.GameElements
 {
@@ -8,6 +9,7 @@ namespace WeaponWizard.GameElements
 	{
 		public enum TileType
 		{
+			Spawn,
 			Grass,
 			Ocean
 		}
@@ -19,6 +21,8 @@ namespace WeaponWizard.GameElements
 		public TileType Type { get; set; }
 
 		public Texture2D Texture { get; set; }
+
+		public Rectangle SourceRect { get; set; }
 
 		public bool IsPassable { get; set; }
 
@@ -46,7 +50,7 @@ namespace WeaponWizard.GameElements
 			}
 		}
 
-		public Tile (int x, int y, TileType type, Texture2D texture, bool isPassable = true)
+		public Tile (int x, int y, TileType type, Texture2D texture, Rectangle source, bool isPassable = true)
 		{
 			X = x;
 			Y = y;
@@ -54,6 +58,11 @@ namespace WeaponWizard.GameElements
 			Texture = texture;
 			IsPassable = isPassable;
 			Color = Color.White;
+			SourceRect = source;
+		}
+
+		public Tile (VPoint point, Texture2D texture, Rectangle source, bool isPassable = true) : this (point.X, point.Y, point.Type, texture, source, isPassable)
+		{
 		}
 	}
 }

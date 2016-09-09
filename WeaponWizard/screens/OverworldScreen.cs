@@ -26,7 +26,7 @@ namespace WeaponWizard.Screens
 
 		public override void OnEnter ()
 		{
-			Engine.AddEntity (new Entity ()
+			var player = Engine.AddEntity (new Entity ()
 				.AddComponent (new TransformComponent (0, 0, 32, 39) {
 				Origin = new Vector2 (32 / 2, 39 / 2),
 				AccuratePosition = _world.GetTileMiddlePoint (0, 0).ToVector2 ()
@@ -35,7 +35,9 @@ namespace WeaponWizard.Screens
 				.AddComponent (new MovementComponent (){ CenterCameraOnAction = true })
 				.AddComponent (new SpriteAnimationComponent (Engine.AnimationStore.Get ("player", "Idle", "Move"))), "player");
 
-			Engine.CenterCameraOnEntity (Engine ["player"]);
+			player.Get<TransformComponent> ().AccuratePosition = _world.GetTileMiddlePoint (_world.Spawn.X, _world.Spawn.Y).ToVector2 ();
+			
+			Engine.CenterCameraOnEntity (player);
 		}
 
 		public override Transition Update (GameTime gametime)
