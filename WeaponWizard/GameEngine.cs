@@ -22,20 +22,14 @@ namespace WeaponWizard
 	/// </summary>
 	public class GameEngine : Game
 	{
+		// TODO: Move this to a json file as well
 		public Resources<Texture2D> Textures = new Resources<Texture2D> (new Dictionary<string, string> () {
 			{ "default", "default" },
 			{ "loading", "loading" },
 			{ "mainmenu_bg", "mainmenu/background" },
 			{ "tile/default", "tiles/default" },
-			{ "tile/grass", "tiles/grass" },
-			{ "tile/ocean", "tiles/ocean" },
 			{ "player", "player" }
 		});
-		public Dictionary<Tile.TileType, Rectangle> TileSourceRects = new Dictionary<Tile.TileType, Rectangle> () {
-			{ Tile.TileType.Spawn, new Rectangle (0, 0, Tile.TileSize.X, Tile.TileSize.Y) },
-			{ Tile.TileType.Grass, new Rectangle (0, 0, Tile.TileSize.X, Tile.TileSize.Y) },
-			{ Tile.TileType.Ocean, new Rectangle (16, 0, Tile.TileSize.X, Tile.TileSize.Y) },
-		};
 
 		public Dictionary<string, IScreen> Screens;
 
@@ -56,6 +50,8 @@ namespace WeaponWizard
 		public SystemManager Systems { get; private set; }
 
 		public AnimationDataStore AnimationStore { get; private set; }
+
+		public TileSheetManager TileSetManager { get; set; }
 
 		public static Texture2D DummyTexture {
 			get {
@@ -136,8 +132,14 @@ namespace WeaponWizard
 			//_screen = Helper.RunPythonMain ("scripts/screens/main.py") ();
 
 			Textures.Load (Content);
-			AnimationStore = new AnimationDataStore (this, "Content\\data\\animations\\".ToPath (true));
-			AnimationStore.LoadAll ();
+			AnimationStore = new AnimationDataStore (this, "Content\\data\\animations\\".ToPath ());
+			AnimationStore.Load ();
+
+			TileSetManager = new TileSheetManager (this, "Content\\data\\tiles\\".ToPath ());
+			TileSetManager.Load ();
+
+			// Set speed based on tilesize
+			Elements.Components.MovementComponent.DefaultSpeed = TileSetManager.Current.TileSize.X / 16.0f;
 
 			BaseGameScreen.StaticEngine = this;
 			LoadScreens ();

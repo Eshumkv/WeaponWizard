@@ -30,30 +30,23 @@ namespace WeaponWizard
 			_engine = engine;
 		}
 
-		public void LoadAll ()
+		public void Load ()
 		{
-			var files = new List<string> ();
-
-			// Go through all the files in the main dir
-			foreach (var file in Directory.GetFiles(_path)) {
-				files.Add (file);
-			}
-
-			// Go through all the sub directories
-			foreach (var dir in Directory.GetDirectories(_path)) {
-				foreach (var file in Directory.GetFiles(dir)) {
-					files.Add (file);
-				}
-			}
+			var files = Helper.GetAllFiles (_path);
 
 			// Load all the files
 			foreach (var file in files) {
 				using (var sr = new StreamReader (file)) {
-					var animationfile = JsonConvert.DeserializeObject<AnimationJsonFile> (sr.ReadToEnd ());
-					var key = animationfile.Id + ".";
+					try {
+						var animationfile = JsonConvert.DeserializeObject<AnimationJsonFile> (sr.ReadToEnd ());
+						var key = animationfile.Id + ".";
 
-					foreach (var animation in animationfile.Animations) {
-						_store.Add (key + animation.Key, animationfile.Load (_engine, animation.Key));
+						foreach (var animation in animationfile.Animations) {
+							_store.Add (key + animation.Key, animationfile.Load (_engine, animation.Key));
+						}
+
+					} catch (Exception e) {
+						Helper.ShowMsgBox ("ERROR: <file: " + file + ">" + e.Message);
 					}
 				}
 			}

@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using System.Text;
 using System.IO;
+using System.Collections.Generic;
 
 namespace WeaponWizard
 {
@@ -12,7 +13,7 @@ namespace WeaponWizard
 			return (((value - oldMin) * (newMax - newMin)) / (oldMax - oldMin)) + newMin;
 		}
 
-		public static string ToPath (this string path, bool dir = false)
+		public static string ToPath (this string path)
 		{
 			var sb = new StringBuilder ();
 
@@ -20,11 +21,51 @@ namespace WeaponWizard
 				sb.Append (part).Append (Path.DirectorySeparatorChar);
 			}
 
-			if (!dir) {
-				sb.Remove (sb.Length - 1, 1);
+			try {
+				var attributes = File.GetAttributes (path);
+
+				// If its not a directory, remove the last slash if it's there
+				if (!attributes.HasFlag (FileAttributes.Directory)) {
+					if (sb.ToString ().EndsWith ("/")) {
+						sb.Remove (sb.Length - 1, 1);
+					}
+				}
+			} catch (Exception) {
 			}
 			
 			return sb.ToString ();
+		}
+
+		/// <summary>
+		/// Gets all files including the ones in a subdirectory.
+		/// </summary>
+		/// <returns>The all files.</returns>
+		/// <param name="path">Path.</param>
+		public static List<string> GetAllFiles (string path)
+		{
+			var files = new List<string> ();
+
+			// Just to be safe
+			path = path.ToPath ();
+
+			// Go through all the files in the main dir
+			foreach (var file in Directory.GetFiles(path)) {
+				files.Add (file);
+			}
+
+			// Go through all the sub directories
+			foreach (var dir in Directory.GetDirectories(path)) {
+				foreach (var file in Directory.GetFiles(dir)) {
+					files.Add (file);
+				}
+			}
+
+			return files;
+		}
+
+		public static void ShowMsgBox (string message)
+		{
+			Console.WriteLine (message);
 		}
 	}
 }

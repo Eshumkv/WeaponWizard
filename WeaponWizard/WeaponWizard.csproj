@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProjectGuid>{2CDACD4B-3BA2-4DBF-94BD-7A00C7A0E4EA}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <RootNamespace>WeaponWizard</RootNamespace>
     <AssemblyName>WeaponWizard</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
@@ -102,16 +102,19 @@
     <Compile Include="elements\Noise.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="game_elements\Voronoi.cs" />
-    <Compile Include="elements\serializers\RenderableComponentSerializer.cs" />
     <Compile Include="elements\animation\AnimationJsonFile.cs" />
     <Compile Include="elements\systems\AnimationDataStore.cs" />
     <Compile Include="elements\animation\FrameInfo.cs" />
     <Compile Include="elements\Sprite.cs" />
+    <Compile Include="elements\TileSheetManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />
     <None Include="packages.config" />
     <None Include="Content\data\animations\player.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\data\tiles\default.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -139,7 +142,7 @@
     <Folder Include="game_elements\" />
     <Folder Include="Content\data\" />
     <Folder Include="Content\data\animations\" />
-    <Folder Include="elements\serializers\" />
     <Folder Include="elements\animation\" />
+    <Folder Include="Content\data\tiles\" />
   </ItemGroup>
 </Project>

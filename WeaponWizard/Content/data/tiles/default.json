@@ -1,0 +1,50 @@
+﻿{
+	"Id": "default",
+	"Image": "tile/default",
+	"TileSize": {
+		"X": 16,
+		"Y": 16,
+	},
+	"SetTiles": {
+		"Spawn": [
+			{
+				"X": 0,
+				"Y": 0,
+				"Pass": true,
+			},
+		],
+		"Grass": [
+			{
+				"X": 0,
+				"Y": 0,
+				"Pass": true,
+			}, 
+			{
+				"X": 1,
+				"Y": 0,
+				"Pass": true,
+			},
+		],
+		"Ocean": [
+			{
+				"X": 2,
+				"Y": 0,
+				"Pass": false,
+			}, 
+		],
+		"Sand": [
+			{
+				"X": 0,
+				"Y": 1,
+				"Pass": true,
+			}, 
+		],
+		"Stone": [
+			{
+				"X": 1,
+				"Y": 1,
+				"Pass": true,
+			}, 
+		],
+	},
+}

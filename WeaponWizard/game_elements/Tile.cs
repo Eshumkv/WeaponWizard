@@ -11,7 +11,9 @@ namespace WeaponWizard.GameElements
 		{
 			Spawn,
 			Grass,
-			Ocean
+			Ocean,
+			Sand,
+			Stone
 		}
 
 		public static readonly Point TileSize = new Point (16, 16);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using WeaponWizard.GameElements;
+using System.Linq;
 
 namespace WeaponWizard.VoronoiDiagram
 {
@@ -49,6 +50,12 @@ namespace WeaponWizard.VoronoiDiagram
 					switch (point.Type) {
 					case Tile.TileType.Ocean:
 						color = Color.DeepSkyBlue;
+						break;
+					case Tile.TileType.Sand:
+						color = Color.YellowGreen;
+						break;
+					case Tile.TileType.Stone:
+						color = Color.Gray;
 						break;
 					default: 
 						break;
@@ -114,7 +121,45 @@ namespace WeaponWizard.VoronoiDiagram
 				list.Add (new VPoint (x, y, Tile.TileType.Grass, true));
 			}
 
+			// Now go through the list again to set the different types of land
+			list = SetLandTypes (list);
+
 			return list;
+		}
+
+		private List<VPoint> SetLandTypes (IEnumerable<VPoint> points)
+		{
+			//var amountOfTypes = Enum.GetNames (typeof(Tile.TileType)).Length - 2; 
+
+			foreach (var point in points) {
+				var closest = GetClosestPoint (points, point);
+
+				if (closest.Type == Tile.TileType.Ocean && point.Type != Tile.TileType.Ocean) {
+					point.Type = Tile.TileType.Sand;
+				}
+			}
+
+			return points.ToList ();
+		}
+
+		private VPoint GetClosestPoint (IEnumerable<VPoint> points, VPoint givenPoint)
+		{
+			float closest_distance = float.MaxValue;
+			var given_point = new Vector2 (givenPoint.X, givenPoint.Y);
+			VPoint closest_point = null;
+
+			points = points.Where (x => x != givenPoint);
+
+			foreach (var point in points) {
+				var distance = Vector2.Distance (point.ToVector2 (), given_point);
+
+				if (distance < closest_distance) {
+					closest_distance = distance;
+					closest_point = point;
+				}
+			}
+
+			return closest_point;
 		}
 
 		private List<VPoint> GetPoints (IEnumerable<VPoint> sites, int width, int height)

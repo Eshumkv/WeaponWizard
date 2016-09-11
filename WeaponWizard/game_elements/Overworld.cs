@@ -60,21 +60,12 @@ namespace WeaponWizard.GameElements
 
 			SetSpawn ();
 
+			var tileset = engine.TileSetManager.Current;
+			var rand = new Random ();
+
 			foreach (var point in Vor.Points) {
-				var isPassable = true;
-
-				switch (point.Type) {
-				case Tile.TileType.Ocean:
-					isPassable = false;
-					break;
-				case Tile.TileType.Spawn:
-					// Default settings
-					break;
-				default:
-					break;
-				}
-
-				var tile = new Tile (point, engine.Textures ["tile/default"], engine.TileSourceRects [point.Type], isPassable);
+				var tilesettile = tileset.GetRandomTile (point.Type, rand);
+				var tile = new Tile (point, tileset.Texture, tilesettile.Rect, tilesettile.IsPassable);
 				Tiles.Add (tile);
 
 				if (point.Type == Tile.TileType.Spawn) {
