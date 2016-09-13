@@ -17,6 +17,12 @@ namespace WeaponWizard
 
 		public string CurrentTileSet { get; set; }
 
+		public string Path {
+			get {
+				return _path;
+			}
+		}
+
 		public TileSheetJsonFile Current {
 			get {
 				return _tilesets [CurrentTileSet];
@@ -39,7 +45,6 @@ namespace WeaponWizard
 					try {
 						var tilesheetfile = JsonConvert.DeserializeObject<TileSheetJsonFile> (sr.ReadToEnd ());
 						tilesheetfile.SetCorrectSizes ();
-						tilesheetfile.Texture = _engine.Textures [tilesheetfile.Image];
 						_tilesets.Add (tilesheetfile.Id, tilesheetfile);
 
 					} catch (Exception e) {
@@ -59,11 +64,31 @@ namespace WeaponWizard
 
 			CurrentTileSet = defaultTileset;
 		}
+
+		public void SetTextures ()
+		{
+			foreach (var tileset in _tilesets.Values) {
+				tileset.Texture = _engine.Textures [tileset.ImageName];
+			}
+		}
+
+		public IDictionary<string, string> GetImagePaths ()
+		{
+			var dict = new Dictionary<string, string> ();
+
+			foreach (var tileset in _tilesets.Values) {
+				dict.Add (tileset.ImageName, tileset.Image);
+			}
+
+			return dict;
+		}
 	}
 
 	public class TileSheetJsonFile
 	{
 		public string Id { get; set; }
+
+		public string ImageName { get; set; }
 
 		public string Image { get; set; }
 

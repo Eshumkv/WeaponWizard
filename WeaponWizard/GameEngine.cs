@@ -22,13 +22,11 @@ namespace WeaponWizard
 	/// </summary>
 	public class GameEngine : Game
 	{
-		// TODO: Move this to a json file as well
+		// Content gets read from the JSON files
+		// NOTE: DON'T FORGET TO ADD THEM TO THE CONTENT PROJECT!!
 		public Resources<Texture2D> Textures = new Resources<Texture2D> (new Dictionary<string, string> () {
 			{ "default", "default" },
-			{ "loading", "loading" },
 			{ "mainmenu_bg", "mainmenu/background" },
-			{ "tile/default", "tiles/default" },
-			{ "player", "player" }
 		});
 
 		public Dictionary<string, IScreen> Screens;
@@ -117,6 +115,9 @@ namespace WeaponWizard
 		/// </summary>
 		protected override void LoadContent ()
 		{
+			AnimationStore = new AnimationDataStore (this, "Content\\data\\animations\\".ToPath ());
+			TileSetManager = new TileSheetManager (this, "Content\\data\\tiles\\".ToPath ());
+
 			// Create a new SpriteBatch, which can be used to draw textures.
 			spriteBatch = new SpriteBatch (GraphicsDevice);
 
@@ -128,15 +129,26 @@ namespace WeaponWizard
 
 			Camera = new Camera2D ();
 
-			//_screen = Helper.GetPythonScreen ("scripts/screens/main.py", "MainScreen");
-			//_screen = Helper.RunPythonMain ("scripts/screens/main.py") ();
-
-			Textures.Load (Content);
-			AnimationStore = new AnimationDataStore (this, "Content\\data\\animations\\".ToPath ());
+			TileSetManager.Load ();
 			AnimationStore.Load ();
 
-			TileSetManager = new TileSheetManager (this, "Content\\data\\tiles\\".ToPath ());
-			TileSetManager.Load ();
+			// Add the content dynamically
+			var paths = new Dictionary<string, string> ();
+
+			foreach (var item in TileSetManager.GetImagePaths ()) {
+				paths.Add (item.Key, item.Value);
+			}
+
+			foreach (var item in AnimationStore.GetImagePaths ()) {
+				paths.Add (item.Key, item.Value);
+			}
+
+			AddContentToTextures (paths);
+
+			Textures.Load (Content);
+
+			TileSetManager.SetTextures ();
+			AnimationStore.SetTextures ();
 
 			// Set speed based on tilesize
 			Elements.Components.MovementComponent.DefaultSpeed = TileSetManager.Current.TileSize.X / 16.0f;
@@ -184,10 +196,6 @@ namespace WeaponWizard
 			_screen.DrawAfterEntities (spriteBatch);
 
 			base.Draw (gameTime);
-		}
-
-		private void MaybeChangeScreen (Transition t)
-		{
 		}
 
 		/// <summary>
@@ -291,6 +299,13 @@ namespace WeaponWizard
 			var t = ent.Get<WeaponWizard.Elements.Components.TransformComponent> ();
 			var middle = new Rectangle ((int)t.X, (int)t.Y, t.Width, t.Height).Center;
 			Camera.CenterCameraOnPoint (this, middle.X, middle.Y);
+		}
+
+		private void AddContentToTextures (IDictionary<string, string> paths)
+		{
+			foreach (var kv in paths) {
+				Textures.AddAsset (kv.Key, kv.Value);
+			}
 		}
 	}
 }

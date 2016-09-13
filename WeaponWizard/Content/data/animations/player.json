@@ -1,5 +1,6 @@
 {
     "Id": "player",
+    "ImageName": "player",
     "Image": "player",
     "Size": {
         "X": 4,

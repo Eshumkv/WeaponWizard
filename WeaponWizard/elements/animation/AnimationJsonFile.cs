@@ -11,6 +11,8 @@ namespace WeaponWizard
 	{
 		public string Id { get; set; }
 
+		public string ImageName { get; set; }
+
 		public string Image { get; set; }
 
 		public Point Size { get; set; }
@@ -35,7 +37,7 @@ namespace WeaponWizard
 			var list = new List<FrameInfo> ();
 
 			if (_texture == null) {
-				_texture = engine.Textures [Image];
+				_texture = engine.Textures [ImageName];
 
 				_part_width = _texture.Width / Size.X;
 				_part_height = _texture.Height / Size.Y;

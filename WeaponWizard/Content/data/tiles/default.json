@@ -1,6 +1,7 @@
 ﻿{
 	"Id": "default",
-	"Image": "tile/default",
+	"ImageName": "tile/default",
+	"Image": "tiles/default",
 	"TileSize": {
 		"X": 16,
 		"Y": 16,

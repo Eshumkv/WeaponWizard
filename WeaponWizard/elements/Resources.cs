@@ -38,6 +38,11 @@ namespace WeaponWizard.Elements
 			_isLoaded = true;
 		}
 
+		public void AddAsset (string name, string path)
+		{
+			_assetNames.Add (name, path);
+		}
+
 		public T AddResource (string name, T resource)
 		{
 			_resources.Add (name, resource);
