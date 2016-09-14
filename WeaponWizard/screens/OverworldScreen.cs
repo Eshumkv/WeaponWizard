@@ -35,7 +35,7 @@ namespace WeaponWizard.Screens
 				.AddComponent (new MovementComponent (){ CenterCameraOnAction = true })
 				.AddComponent (new SpriteAnimationComponent (Engine.AnimationStore.Get ("player", "Idle", "Move"))), "player");
 
-			player.Get<TransformComponent> ().AccuratePosition = _world.GetTileMiddlePoint (_world.Spawn.X, _world.Spawn.Y).ToVector2 ();
+			//player.Get<TransformComponent> ().AccuratePosition = _world.GetTileMiddlePoint (_world.Spawn.X, _world.Spawn.Y).ToVector2 ();
 			
 			Engine.CenterCameraOnEntity (player);
 		}
@@ -46,7 +46,7 @@ namespace WeaponWizard.Screens
 				return new Transition () { NextScreen = "mainmenu" };
 			}
 			if (Engine.Systems.InputSystem.IsPressed (Keys.Space)) {
-				_world.GenerateWorld (Engine);
+				_world.GenerateWorldPerlin ();
 			}
 
 			return null;

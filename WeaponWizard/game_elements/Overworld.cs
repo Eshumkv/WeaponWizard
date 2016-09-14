@@ -7,6 +7,7 @@ using WeaponWizard.Noise;
 using System.Linq;
 using WeaponWizard.VoronoiDiagram;
 using System.Collections;
+using WeaponWizard.Elements.Noise;
 
 namespace WeaponWizard.GameElements
 {
@@ -15,6 +16,8 @@ namespace WeaponWizard.GameElements
 	public class Overworld : IRenderable
 	{
 		private Voronoi Vor;
+		private List<PPoint> _perlinList;
+		private GameEngine _engine;
 
 		public List<Tile> Tiles { get; set; }
 
@@ -24,8 +27,13 @@ namespace WeaponWizard.GameElements
 
 		public Overworld (GameEngine engine)
 		{
+			_perlinList = new List<PPoint> ();
 			Tiles = new List<Tile> ();
-			GenerateWorld (engine);
+
+			_engine = engine;
+
+			//GenerateWorldVoronoi ();
+			GenerateWorldPerlin ();
 		}
 
 		public void Draw (SpriteBatch batch)
@@ -37,7 +45,13 @@ namespace WeaponWizard.GameElements
 					color: tile.Color);
 			}
 
-			Vor.Draw (batch);
+			//Vor.Draw (batch);
+
+			foreach (var point in _perlinList) {
+				batch.Draw (GameEngine.DummyTexture, 
+					position: point.Position,
+					color: point.Color);
+			}
 		}
 
 		public void CenterCameraOnTile (GameEngine engine, int tileX, int tileY)
@@ -51,16 +65,53 @@ namespace WeaponWizard.GameElements
 			return new Rectangle (x * Tile.TileSize.X, y * Tile.TileSize.Y, Tile.TileSize.X, Tile.TileSize.Y).Center;
 		}
 
-		public void GenerateWorld (GameEngine engine, int? seed = null)
+		public void GenerateWorldPerlin (int? seed = null)
+		{
+			PerlinNoise perlin;
+
+			_perlinList.Clear ();
+
+			if (seed == null)
+				perlin = new PerlinNoise (new Random ().Next (Int32.MaxValue));
+			else {
+				perlin = new PerlinNoise ((int)seed);
+			}
+
+			var w = 500;
+			var h = 500;
+
+			var widthDivisor = 1 / (double)w;
+			var heightDivisor = 1 / (double)h;
+
+			for (var x = 0; x < w; x++) {
+				for (var y = 0; y < h; y++) {
+					// Note that the result from the noise function is in the range -1 to 1, but I want it in the range of 0 to 1
+					// that's the reason of the strange code
+					double v =
+						// First octave
+						(perlin.Noise (2 * x * widthDivisor, 2 * y * heightDivisor, -0.5) + 1) / 2 * 0.7 +
+						// Second octave
+						(perlin.Noise (4 * x * widthDivisor, 4 * y * heightDivisor, 0) + 1) / 2 * 0.2 +
+						// Third octave
+						(perlin.Noise (8 * x * widthDivisor, 8 * y * heightDivisor, +0.5) + 1) / 2 * 0.1;
+
+					v = Math.Min (1, Math.Max (0, v));
+					_perlinList.Add (new PPoint (x, y, v));
+				}
+			}
+		}
+
+
+		public void GenerateWorldVoronoi (int? seed = null)
 		{
 			Tiles.Clear ();
 
 			Vor = new Voronoi (seed);
 			Vor.Calculate (150, 300, 300);
 
-			SetSpawn ();
+			SetSpawnVoronoi ();
 
-			var tileset = engine.TileSetManager.Current;
+			var tileset = _engine.TileSetManager.Current;
 			var rand = new Random ();
 
 			foreach (var point in Vor.Points) {
@@ -74,7 +125,7 @@ namespace WeaponWizard.GameElements
 			}
 		}
 
-		private void SetSpawn ()
+		private void SetSpawnVoronoi ()
 		{
 			var grassTiles = Vor.Points.Where (x => x.Type == Tile.TileType.Grass);
 			var count = grassTiles.Count ();
@@ -167,6 +218,31 @@ namespace WeaponWizard.GameElements
 			public IEnumerable<VPoint> All ()
 			{
 				return new List<VPoint> () { Point1, Point2, Point3, Point4, Point5, Point6, Point7, Point8 };
+			}
+		}
+
+		private class PPoint
+		{
+			public int X { get; set; }
+
+			public int Y { get; set; }
+
+			public Vector2 Position { get; set; }
+
+			public double Value { get; set; }
+
+			public Color Color { get; private set; }
+
+			public PPoint (int x, int y, double v)
+			{
+				X = x;
+				Y = y;
+				Value = v;
+
+				var c = (int)(Value * 255);
+
+				Color = new Color (c, c, c);
+				Position = new Vector2 (X, Y);
 			}
 		}
 	}

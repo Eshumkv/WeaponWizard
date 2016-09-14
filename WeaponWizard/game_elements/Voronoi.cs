@@ -34,7 +34,7 @@ namespace WeaponWizard.VoronoiDiagram
 
 		public void Calculate (int amount, int width, int height)
 		{
-			data = GenerateData (amount, width, height);
+			data = GenerateData2 (amount, width, height);
 			data = GetPoints (data, width, height);
 		}
 
@@ -63,6 +63,45 @@ namespace WeaponWizard.VoronoiDiagram
 					DrawPoint (batch, point, color);
 				}
 			}
+		}
+
+		private List<VPoint> GenerateData2 (int centeramount, int width, int height)
+		{
+			var list = new List<VPoint> ();
+
+			var edge = new Point ((int)(width * 0.07), (int)(height * 0.07));
+			var setValue = 3;
+
+			if (edge.X == 0) {
+				edge.X = 1;
+			}
+
+			// top & bottom
+			for (var x = edge.X; x < width; x += edge.X) {
+				list.Add (new VPoint (x, setValue, Tile.TileType.Ocean, true));
+				list.Add (new VPoint (x, height - setValue, Tile.TileType.Ocean, true));
+			}
+
+			// left & right
+			for (var y = edge.Y; y < height; y += edge.Y) {
+				list.Add (new VPoint (setValue, y, Tile.TileType.Ocean, true));
+				list.Add (new VPoint (width - setValue, y, Tile.TileType.Ocean, true));
+			}
+
+			var sv2 = setValue * 2;
+			var randXLimit = width - sv2 * 2;
+			var randYLimit = height - sv2 * 2;
+
+			for (var i = 0; i < centeramount; i++) {
+				var x = sv2 + rand.Next (randXLimit);
+				var y = sv2 + rand.Next (randYLimit);
+				list.Add (new VPoint (x, y, Tile.TileType.Grass, true));
+			}
+
+			// Now go through the list again to set the different types of land
+			list = SetLandTypes (list);
+
+			return list;
 		}
 
 		private List<VPoint> GenerateData (int totalamount, int width, int height)

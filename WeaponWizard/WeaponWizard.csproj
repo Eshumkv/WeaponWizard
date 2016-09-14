@@ -107,6 +107,7 @@
     <Compile Include="elements\animation\FrameInfo.cs" />
     <Compile Include="elements\Sprite.cs" />
     <Compile Include="elements\TileSheetManager.cs" />
+    <Compile Include="elements\noise\PerlinNoise.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />
@@ -144,5 +145,6 @@
     <Folder Include="Content\data\animations\" />
     <Folder Include="elements\animation\" />
     <Folder Include="Content\data\tiles\" />
+    <Folder Include="elements\noise\" />
   </ItemGroup>
 </Project>
