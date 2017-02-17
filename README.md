@@ -1,3 +1,7 @@
+# Discontinued ...
+
+...
+
 # WeaponWizard
 
 Your son has been taken. You are a wizard capable of summoning weapons, so you decide to take him back.
